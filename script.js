@@ -20,11 +20,11 @@ function multiply(number1, number2) {
 }
 
 function divide(number1, number2) {
-    if (number1 === 0 || number2 === 0) {
+    if (number2 === 0) {
         isOperationCompleted = true;
         return "You can't do that and you know it bro...";
     }
-    return number1 / number2;
+    return Number((number1 / number2).toFixed(3));
 }
 
 function operate(operator, number1, number2) {
@@ -46,7 +46,7 @@ function operate(operator, number1, number2) {
             isOperationCompleted = true;
             return "First you have to give me some data so I can calculate something for you, my friend!";
     }
-    return Number(result.toFixed(3));
+    return result;
 }
 
 function joinNumericalDigits(currentValue, digitToAdd) {
@@ -57,7 +57,7 @@ function joinNumericalDigits(currentValue, digitToAdd) {
 
 function showEnteredData() {
     let currentValue = "";
-    if (firstOperand) {
+    if (firstOperand !== null) {
         if (secondOperand === null) {
             currentValue = `${firstOperand} ${operator}`;
             currentUserInputs.textContent = currentValue;
@@ -69,7 +69,7 @@ function showEnteredData() {
 }
 
 function provideFinalCalculation() {
-    if (firstOperand && secondOperand) {
+    if (firstOperand !== null && secondOperand !== null) {
         let result = operate(operator, firstOperand, secondOperand);
         showEnteredData();
         calculationResult.textContent = result;
@@ -81,8 +81,8 @@ function cleanCalculationData() {
     firstOperand = null;
     secondOperand = null;
     operator = "";
-    currentUserInputs.textContent = "";
-    calculationResult.textContent = "";
+    currentUserInputs.textContent = 0;
+    calculationResult.textContent = 0;
     isOperationCompleted = false;
 }
 
@@ -90,7 +90,7 @@ function processSelectedNumber(number) {
     if (isOperationCompleted) {
         cleanCalculationData();
     }
-    if (firstOperand === null || firstOperand === 0) {
+    if (firstOperand === null || (firstOperand === 0 && !operator)) {
         firstOperand = Number(number);
     } else if (!operator) {
         firstOperand = joinNumericalDigits(firstOperand, number);

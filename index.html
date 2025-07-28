@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Calculator TOP HB</title>
 </head>
+
 <body>
-    <header></header>
+    <header>Arroz Header</header>
     <main>
         <section class="calculator-panel">
             <section class="calculator-display">
-                <output class="current-user-inputs">Arroz</output>
+                <output class="current-user-inputs">0</output>
                 <br>
-                <output class="calculation-result">Arroz</output>
+                <output class="calculation-result">0</output>
             </section>
             <section class="calculator-buttons">
+                <button class="calc-button operator" data-type="operator" data-value="*">X</button>
+                <button class="calc-button operator" data-type="operator" data-value="-">-</button>
+                <button class="calc-button operator" data-type="operator" data-value="+">+</button>
+                <button class="calc-button operator" data-type="operator" data-value="/">/</button>
                 <button class="calc-button number" data-type="number" data-value="7">7</button>
                 <button class="calc-button number" data-type="number" data-value="8">8</button>
                 <button class="calc-button number" data-type="number" data-value="9">9</button>
-                <button class="calc-button operator" data-type="operator" data-value="*">X</button>
+                <button class="calc-button clear" data-type="clear" aria-label="Clear">AC</button>
                 <button class="calc-button number" data-type="number" data-value="4">4</button>
                 <button class="calc-button number" data-type="number" data-value="5">5</button>
                 <button class="calc-button number" data-type="number" data-value="6">6</button>
-                <button class="calc-button operator" data-type="operator" data-value="-">-</button>
+                <button class="calc-button delete" data-type="delete" aria-label="Delete">DEL</button>
                 <button class="calc-button number" data-type="number" data-value="1">1</button>
                 <button class="calc-button number" data-type="number" data-value="2">2</button>
                 <button class="calc-button number" data-type="number" data-value="3">3</button>
-                <button class="calc-button operator" data-type="operator" data-value="+">+</button>
+                <button class="calc-button decimal-point" data-type="decimal-point"
+                    aria-label="Decimal point">.</button>
                 <button class="calc-button number" data-type="number" data-value="0">0</button>
-                <button class="calc-button operator" data-type="operator" data-value="/">/</button>
-                <button class="calc-button clear" data-type="clear" aria-label="Clear">AC</button>
                 <button class="calc-button equal" data-type="equal" aria-label="Calculate">=</button>
             </section>
         </section>
     </main>
-    <footer></footer>
+    <footer>Arroz Footer</footer>
     <script src="./script.js"></script>
 </body>
+
 </html>
