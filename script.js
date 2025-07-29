@@ -2,6 +2,7 @@ const calcButtons = document.querySelectorAll(".calc-button");
 const currentUserInputs = document.querySelector(".current-user-inputs");
 const calculationResult = document.querySelector(".calculation-result");
 
+const decimalPoint = ".";
 let firstOperand = null;
 let secondOperand = null;
 let operator = "";
@@ -24,7 +25,7 @@ function divide(number1, number2) {
         isOperationCompleted = true;
         return "You can't do that and you know it bro...";
     }
-    return Number((number1 / number2).toFixed(3));
+    return number1 / number2;
 }
 
 function operate(operator, number1, number2) {
@@ -46,13 +47,22 @@ function operate(operator, number1, number2) {
             isOperationCompleted = true;
             return "First you have to give me some data so I can calculate something for you, my friend!";
     }
-    return result;
+    return typeof result === "string" ? result : Number(result.toFixed(2));
+}
+
+function operandsAreUsable() {
+    return !(typeof firstOperand === 'string' || typeof secondOperand === 'string')
 }
 
 function joinNumericalDigits(currentValue, digitToAdd) {
-    let temporaryText = String(currentValue);
-    temporaryText += digitToAdd;
-    return Number(temporaryText);
+    let temporaryText = String(currentValue) + digitToAdd;
+    //temporaryText += digitToAdd;
+    return (/\.$|\.0+$/).test(temporaryText) ? temporaryText : Number(temporaryText);
+}
+
+function deleteNumericalDigits(currentValue) {
+    let temporaryText = String(currentValue).slice(0, -1);
+    return (/\.$|\.0+$/).test(temporaryText) ? temporaryText : Number(temporaryText);
 }
 
 function showEnteredData() {
@@ -65,15 +75,19 @@ function showEnteredData() {
             currentValue = `${firstOperand} ${operator} ${secondOperand}`;
             currentUserInputs.textContent = currentValue;
         }
+    } else {
+        currentUserInputs.textContent = 0;
     }
 }
 
 function provideFinalCalculation() {
-    if (firstOperand !== null && secondOperand !== null) {
-        let result = operate(operator, firstOperand, secondOperand);
-        showEnteredData();
-        calculationResult.textContent = result;
-        isOperationCompleted = true;
+    if (operandsAreUsable()) {
+        if (firstOperand !== null && secondOperand !== null) {
+            let result = operate(operator, firstOperand, secondOperand);
+            showEnteredData();
+            calculationResult.textContent = result;
+            isOperationCompleted = true;
+        }
     }
 }
 
@@ -106,14 +120,54 @@ function checkOperatorStatus(value) {
     if (isOperationCompleted) {
         cleanCalculationData();
     }
-    if (operator && secondOperand) {
-        let result = operate(operator, firstOperand, secondOperand);
-        calculationResult.textContent = result;
-        firstOperand = result;
-        operator = value;
-        secondOperand = null;
-    } else if (firstOperand) {
-        operator = value;
+    if (operandsAreUsable()) {
+        if (operator && secondOperand) {
+            let result = operate(operator, firstOperand, secondOperand);
+            calculationResult.textContent = result;
+            firstOperand = result;
+            operator = value;
+            secondOperand = null;
+        } else if (firstOperand) {
+            operator = value;
+        }
+        showEnteredData();
+    }
+}
+
+function addDecimalPoint() {
+    if (isOperationCompleted) {
+        cleanCalculationData();
+    }
+    if ((firstOperand === 0 || firstOperand) && !operator) {
+        if (!(/\./).test(firstOperand)) {
+            firstOperand = joinNumericalDigits(firstOperand, decimalPoint);
+        }
+    } else if (secondOperand === 0 || secondOperand) {
+        if (!(/\./).test(secondOperand)) {
+            secondOperand = joinNumericalDigits(secondOperand, decimalPoint);
+        }
+    }
+    showEnteredData();
+}
+
+function processDeletionRequest() {
+    if (isOperationCompleted) {
+        cleanCalculationData();
+    }
+    if (!operator) {
+        if (String(firstOperand).length === 1) {
+            firstOperand = null;
+        } else if (firstOperand !== null) {
+            firstOperand = deleteNumericalDigits(firstOperand);
+        }
+    } else if (secondOperand === null) {
+        operator = "";
+    } else {
+        if (String(secondOperand).length === 1) {
+            secondOperand = null;
+        } else {
+            secondOperand = deleteNumericalDigits(secondOperand);
+        }
     }
     showEnteredData();
 }
@@ -127,6 +181,12 @@ function handleUserInput(chosenButton) {
             break;
         case "operator":
             checkOperatorStatus(buttonValue);
+            break;
+        case "decimal-point":
+            addDecimalPoint();
+            break;
+        case "delete":
+            processDeletionRequest();
             break;
         case "equal":
             provideFinalCalculation();
