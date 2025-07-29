@@ -56,7 +56,6 @@ function operandsAreUsable() {
 
 function joinNumericalDigits(currentValue, digitToAdd) {
     let temporaryText = String(currentValue) + digitToAdd;
-    //temporaryText += digitToAdd;
     return (/\.$|\.0+$/).test(temporaryText) ? temporaryText : Number(temporaryText);
 }
 
@@ -65,7 +64,7 @@ function deleteNumericalDigits(currentValue) {
     return (/\.$|\.0+$/).test(temporaryText) ? temporaryText : Number(temporaryText);
 }
 
-function showEnteredData() {
+function updateDisplay() {
     let currentValue = "";
     if (firstOperand !== null) {
         if (secondOperand === null) {
@@ -84,7 +83,7 @@ function provideFinalCalculation() {
     if (operandsAreUsable()) {
         if (firstOperand !== null && secondOperand !== null) {
             let result = operate(operator, firstOperand, secondOperand);
-            showEnteredData();
+            updateDisplay();
             calculationResult.textContent = result;
             isOperationCompleted = true;
         }
@@ -113,7 +112,7 @@ function processSelectedNumber(number) {
     } else {
         secondOperand = joinNumericalDigits(secondOperand, number);
     }
-    showEnteredData();
+    updateDisplay();
 }
 
 function checkOperatorStatus(value) {
@@ -130,7 +129,7 @@ function checkOperatorStatus(value) {
         } else if (firstOperand) {
             operator = value;
         }
-        showEnteredData();
+        updateDisplay();
     }
 }
 
@@ -147,7 +146,7 @@ function addDecimalPoint() {
             secondOperand = joinNumericalDigits(secondOperand, decimalPoint);
         }
     }
-    showEnteredData();
+    updateDisplay();
 }
 
 function processDeletionRequest() {
@@ -169,7 +168,7 @@ function processDeletionRequest() {
             secondOperand = deleteNumericalDigits(secondOperand);
         }
     }
-    showEnteredData();
+    updateDisplay();
 }
 
 function handleUserInput(chosenButton) {
@@ -200,6 +199,32 @@ function handleUserInput(chosenButton) {
     }
 }
 
+function handleKeyboardInput(keyPressed) {
+    const keyValue = keyPressed.key;
+    switch (true) {
+        case (/\d/).test(keyValue):
+            processSelectedNumber(keyValue);
+            break;
+        case (/\/|\*|\-|\+/).test(keyValue):
+            checkOperatorStatus(keyValue);
+            break;
+        case (/\./).test(keyValue):
+            addDecimalPoint();
+            break;
+        case (/Delete/).test(keyValue):
+            processDeletionRequest();
+            break;
+        case (/Enter/).test(keyValue):
+            provideFinalCalculation();
+            break;
+        default:
+            console.log("Obviously it's another key that has no relation to the calculator bro...");
+            break;
+    }
+}
+
 calcButtons.forEach(button => {
     button.addEventListener("click", handleUserInput);
 });
+
+document.addEventListener("keydown", handleKeyboardInput);
