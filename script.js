@@ -50,6 +50,18 @@ function operate(operator, number1, number2) {
     return typeof result === "string" ? result : Number(result.toFixed(2));
 }
 
+function beautifyOperator(operatorValue) {
+    switch (operatorValue) {
+        case "/":
+            return "\u00F7";
+        case "*":
+            return "\u00D7";
+
+        default:
+            return operatorValue;
+    }
+}
+
 function operandsAreUsable() {
     return !(typeof firstOperand === 'string' || typeof secondOperand === 'string')
 }
@@ -68,10 +80,10 @@ function updateDisplay() {
     let currentValue = "";
     if (firstOperand !== null) {
         if (secondOperand === null) {
-            currentValue = `${firstOperand} ${operator}`;
+            currentValue = `${firstOperand} ${beautifyOperator(operator)}`;
             currentUserInputs.textContent = currentValue;
         } else {
-            currentValue = `${firstOperand} ${operator} ${secondOperand}`;
+            currentValue = `${firstOperand} ${beautifyOperator(operator)} ${secondOperand}`;
             currentUserInputs.textContent = currentValue;
         }
     } else {
@@ -211,13 +223,14 @@ function handleKeyboardInput(keyPressed) {
         case (/\./).test(keyValue):
             addDecimalPoint();
             break;
-        case (/Delete/).test(keyValue):
+        case (/Delete|Backspace/).test(keyValue):
             processDeletionRequest();
             break;
         case (/Enter/).test(keyValue):
             provideFinalCalculation();
             break;
         default:
+            console.log(keyValue);
             console.log("Obviously it's another key that has no relation to the calculator bro...");
             break;
     }
