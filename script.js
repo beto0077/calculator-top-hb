@@ -230,7 +230,6 @@ function handleKeyboardInput(keyPressed) {
             provideFinalCalculation();
             break;
         default:
-            console.log(keyValue);
             console.log("Obviously it's another key that has no relation to the calculator bro...");
             break;
     }
